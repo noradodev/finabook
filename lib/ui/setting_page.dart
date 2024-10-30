@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/language_selector.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'about_us_screen.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -23,7 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const Divider(height: 30, thickness: 1),
             _buildSectionTitle('App Settings'),
             LanguageSelector(),
-            _buildDarMode(
+            _buildDarkMode(
               title: 'Dark Mode',
               value: isDarkMode,
               onChanged: (value) {
@@ -39,7 +40,11 @@ class _SettingsPageState extends State<SettingsPage> {
               icon: Icons.person,
               title: 'About Us',
               onTap: () {
-                // Navigate to About Us
+          
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutUsScreen()),
+                );
               },
             ),
           ],
@@ -68,14 +73,14 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         children: [
           Image.asset(
-            'assets/images/logo_text.png', // Make sure path matches pubspec.yaml
-            width: 200, // Set desired width
-            fit: BoxFit.contain, // Control how image fits
+            'assets/images/logo_text.png',
+            width: 200,
+            fit: BoxFit.contain,
           ),
           const Text(
             'v1.0',
-            style: TextStyle(color: const Color.fromARGB(255, 119, 114, 114)),
-          )
+            style: TextStyle(color: Color.fromARGB(255, 119, 114, 114)),
+          ),
         ],
       ),
     );
@@ -85,7 +90,9 @@ class _SettingsPageState extends State<SettingsPage> {
       {required IconData icon,
       required String title,
       required VoidCallback onTap}) {
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         decoration: BoxDecoration(
@@ -101,40 +108,35 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.people,
-                    color: Colors.blue,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                icon,
+                color: Colors.blue,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
             ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 
-
-
-  Widget _buildDarMode({
+  Widget _buildDarkMode({
     required String title,
     required bool value,
     required ValueChanged<bool> onChanged,

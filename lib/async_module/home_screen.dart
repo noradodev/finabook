@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<ScreenData> _screens = [
     ScreenData('Home', Icons.home, const HomePage()),
-    ScreenData('Books', Icons.book, const BooksPage()),
+    ScreenData('Books', Icons.book,  BookScreen()),
     ScreenData('Settings', Icons.settings, const  SettingsPage()),
   ];
 
@@ -37,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    // Add notification action here
                   },
                   icon: const Icon(Icons.notifications),
                 ),
