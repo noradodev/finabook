@@ -1,0 +1,24 @@
+{
+    "home": "ផ្ទះ",
+    "books": "សៀវភៅ",
+    "settings": "ការកំណត់",
+    "language": "ភាសា",
+    
+        "app_settings": {
+          "title": "ការកំណត់កម្មវិធី"
+        },
+        "more_information": {
+          "title": "ព័ត៌មានបន្ថែម"
+        },
+        "about_us": {
+          "title": "អំពីយើង"
+        },
+        "dark_mode": {
+          "label": "មុងារងងឹត"
+        },
+        "select_language": {
+          "label": "ជ្រើសរើសភាសា"
+        }
+      
+  }
+  

@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import '../widgets/language_selector.dart';
+import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'about_us_screen.dart';
+import '../widgets/theme_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
-
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  bool isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +17,16 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             _buildTopSetting(),
             const Divider(height: 30, thickness: 1),
-            _buildSectionTitle('App Settings'),
-            LanguageSelector(),
-            _buildDarkMode(
-              title: 'Dark Mode',
-              value: isDarkMode,
-              onChanged: (value) {
-                setState(() {
-                  isDarkMode = value;
-                });
-              },
-            ),
+            _buildSectionTitle('app_settings.title'.tr()), 
+            _buildLanguageSelector(context),
+            _buildDarkMode(context),
             const Divider(height: 30, thickness: 1),
-            _buildSectionTitle('More Information'),
+            _buildSectionTitle('more_information.title'.tr()), 
             _buildListItem(
               context,
               icon: Icons.person,
-              title: 'About Us',
+              title: 'about_us.title'.tr(), 
               onTap: () {
-          
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AboutUsScreen()),
@@ -87,20 +73,20 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildListItem(BuildContext context,
-      {required IconData icon,
-      required String title,
-      required VoidCallback onTap}) {
+      {required IconData icon, required String title, required VoidCallback onTap}) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: themeProvider.isDarkMode ? Colors.grey[800] : Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: themeProvider.isDarkMode ? Colors.black12 : Colors.grey.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: 4,
               offset: const Offset(0, 2),
@@ -112,22 +98,22 @@ class _SettingsPageState extends State<SettingsPage> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: themeProvider.isDarkMode ? Colors.grey[700] : Colors.blue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
-                color: Colors.blue,
+                color: themeProvider.isDarkMode ? Colors.yellow : Colors.blue,
                 size: 20,
               ),
             ),
             const SizedBox(width: 12),
             Text(
-              title,
-              style: const TextStyle(
+              title.tr(),
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
+                color: themeProvider.isDarkMode ? Colors.white : Colors.black87,
               ),
             ),
           ],
@@ -136,16 +122,73 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildDarkMode({
-    required String title,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
+  Widget _buildDarkMode(BuildContext context) {
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          decoration: BoxDecoration(
+            color: themeProvider.isDarkMode ? Colors.grey[800] : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: themeProvider.isDarkMode ? Colors.black12 : Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: themeProvider.isDarkMode ? Colors.grey[700] : Colors.blue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      themeProvider.isDarkMode ? Icons.nightlight_round : Icons.sunny,
+                      color: themeProvider.isDarkMode ? Colors.yellow : Colors.blue,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'dark_mode.label'.tr(), // Use .tr() for translations
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: themeProvider.isDarkMode ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+              Switch(
+                value: themeProvider.isDarkMode,
+                onChanged: (value) {
+                  themeProvider.toggleTheme(value);
+                },
+                activeColor: Colors.blue,
+                activeTrackColor: Colors.blue.withOpacity(0.3),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageSelector(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -159,36 +202,35 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.sunny,
-                  color: Colors.blue,
-                  size: 20,
-                ),
+          Text(
+            'select_language.label'.tr(), 
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          DropdownButton<String>(
+            value: context.locale.languageCode,
+            icon: const Icon(Icons.arrow_drop_down),
+            underline: Container(
+              height: 2,
+              color: Colors.blue,
+            ),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                context.setLocale(Locale(newValue));
+              }
+            },
+            items: const [
+              DropdownMenuItem(
+                value: 'en',
+                child: Text('English'),
               ),
-              const SizedBox(width: 12),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
+              DropdownMenuItem(
+                value: 'km',
+                child: Text('Khmer'),
               ),
             ],
-          ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeColor: Colors.blue,
-            activeTrackColor: Colors.blue.withOpacity(0.3),
           ),
         ],
       ),

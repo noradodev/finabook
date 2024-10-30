@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart'; 
 import '../ui/home_page.dart';
 import '../ui/books_page.dart';
 import '../ui/setting_page.dart';
@@ -15,45 +16,34 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   final List<ScreenData> _screens = [
-    ScreenData('Home', Icons.home, const HomePage()),
-    ScreenData('Books', Icons.book,  BookScreen()),
-    ScreenData('Settings', Icons.settings, const  SettingsPage()),
+    ScreenData('home', Icons.home, const HomePage()), // Use localization keys
+    ScreenData('books', Icons.book, BookScreen()),
+    ScreenData('settings', Icons.settings, const SettingsPage()),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              title: Text(
-                _screens[_selectedIndex].title,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              backgroundColor: innerBoxIsScrolled ? Colors.yellowAccent : Colors.transparent,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.notifications),
-                ),
-              ],
-              floating: true,
-              snap: true,
-              forceElevated: innerBoxIsScrolled,
-            ),
-          ];
-        },
-        body: _screens[_selectedIndex].widget,
+      appBar: AppBar(
+        title: Text(
+          _screens[_selectedIndex].titleKey.tr(), // Translate the title
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications),
+          ),
+        ],
       ),
+      body: _screens[_selectedIndex].widget,
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: Colors.yellowAccent.withOpacity(0.2),
-          labelTextStyle: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.selected)) {
+          labelTextStyle: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
               return const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -68,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }),
         ),
         child: NavigationBar(
-          indicatorColor: Colors.yellowAccent.withOpacity(0.2),
           selectedIndex: _selectedIndex,
           onDestinationSelected: (int index) {
             setState(() {
@@ -82,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: const Color.fromARGB(255, 187, 168, 0),
                     ),
                     icon: Icon(screen.icon),
-                    label: screen.title,
+                    label: screen.titleKey.tr(), // Translate the label
                   ))
               .toList(),
         ),
@@ -92,9 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ScreenData {
-  final String title;
+  final String titleKey; // Change title to titleKey for localization
   final IconData icon;
   final Widget widget;
 
-  ScreenData(this.title, this.icon, this.widget);
+  ScreenData(this.titleKey, this.icon, this.widget);
 }

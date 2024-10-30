@@ -31,7 +31,6 @@ class BookDetailScreen extends StatelessWidget {
     );
   }
 
-  // Cover Image Section
   Widget _buildCoverImage() {
     return Container(
       height: 300,

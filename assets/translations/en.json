@@ -1,0 +1,26 @@
+{
+    "home": "Home",
+    "books": "Books",
+    "settings": "Settings",
+
+    "language": "Language",
+   
+        "app_settings": {
+          "title": "App Settings"
+        },
+        "more_information": {
+          "title": "More Information"
+        },
+        "about_us": {
+          "title": "About Us"
+        },
+        "dark_mode": {
+          "label": "Dark Mode"
+        },
+        "select_language": {
+          "label": "Select Language"
+        }
+    
+      
+  }
+  
